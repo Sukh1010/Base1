@@ -16,15 +16,17 @@ app.get("/users", async (req, res) => {
     // let data = await User.find({ age: { $gt: 22 } }).select({ name: 0 });
     // let data = await User.find({age : { $in : [19,20,22,25]}});
     // let data = await User.find({ age: { $in: [19, 20, 22, 25] } });
-    let data = userData
-      .filter(
-        (person) => person.name === "Massey Padilla" && person.age % 2 == 1
-      )
-      .map((person) => person.name)
-      .limit(1);
-    console.log(data, "result");
+    // let data = userData
+    //   .filter(
+    //     (person) => person.name === "Massey Padilla" && person.age % 2 == 1
+    //   )
+    //   .map((person) => person.name);
 
-    res.status(200).send({ count: data.length, data });
+    const dataLimit = await User.find()
+      .limit(req.query.limit || 3)
+      .skip(req.query.page || 0);
+
+    res.status(200).send({ dataLimit });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
